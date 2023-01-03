@@ -66,8 +66,10 @@ Not: Bu fonskiyon, aşağıdaki diğer görevler için de bir callback fonksiyon
 */
 
 function takimSkoru(){
-    
+   return (Math.floor(Math.random()*16)+10);
 }
+console.log(takimSkoru());
+
 
 
 
@@ -87,11 +89,20 @@ Aşağıdaki macSonucu() fonksiyonununda aşağıdakileri yapınız:
 }
 */ 
 
-function macSonucu(/*Kodunuzu buraya yazınız*/){
-  /*Kodunuzu buraya yazınız*/
+function macSonucu(callback,ceyrek){
+  let evSahibiSkoru = 0;
+  let konukTakımSkoru = 0;
+  for(let i = 1;i<= ceyrek; i++){
+    evSahibiSkoru = evSahibiSkoru + callback();
+    konukTakımSkoru += callback();
+  }
+  let macSkoru = {
+    "EvSahibi": evSahibiSkoru,
+    "KonukTakim": konukTakımSkoru
+  }
+  return macSkoru;
 }
-
-
+console.log(macSonucu(takimSkoru,4));
 
 
 
@@ -110,11 +121,16 @@ Aşağıdaki periyotSkoru() fonksiyonununda aşağıdakileri yapınız:
   */
 
 
-function periyotSkoru(/*Kodunuzu buraya yazınız*/) {
-  /*Kodunuzu buraya yazınız*/
+function periyotSkoru(callback) {
+  let EvSahibi = callback();
+  let KonukTakim = callback();
 
+  return {
+    "EvSahibi": EvSahibi,
+    "KonukTakim": KonukTakim
+  }
 }
-
+console.log(periyotSkoru(takimSkoru));
 
 /* Zorlayıcı Görev 5: skorTabelasi() 
 Aşağıdaki skorTabelasi() fonksiyonunu kullanarak aşağıdakileri yapınız:
@@ -147,9 +163,32 @@ MAÇ UZAR ise skorTabelasi(periyotSkoru,takimSkoru,4)
 ] */
 // NOTE: Bununla ilgili bir test yoktur. Eğer logladığınız sonuçlar yukarıdakine benziyor ise tmamlandı sayabilirsiniz.
 
-function skorTabelasi(/*Kodunuzu buraya yazınız*/) {
-  /*Kodunuzu buraya yazınız*/
+console.clear();
+
+
+function skorTabelasi(cbperiod,cbtakim,ceyrek) {
+  let macOzeti = [];
+  let evSahibi = 0;
+  let konukTakim = 0;
+for(let i =1; i<= ceyrek; i++){
+  let periyotSonucu = periyotSkoru(takimSkoru);
+  evSahibi += periyotSonucu.EvSahibi;
+  konukTakim += periyotSonucu.KonukTakim;
+  macOzeti.push(`${i}. Periyot: Ev Sahibi ${periyotSonucu.EvSahibi} - Konuk Takım ${periyotSonucu.KonukTakim}`);
+
 }
+let i = 1;
+while(evSahibi === konukTakim){
+  let uzatmaSkoru = periyotSkoru(takimSkoru);
+  evSahibi += uzatmaSkoru.EvSahibi;
+  konukTakim += uzatmaSkoru.KonukTakim;
+  macOzeti.push(`${i}. Uzatma: Ev Sahibi ${uzatmaSkoru.EvSahibi} - Konuk Takım ${uzatmaSkoru.KonukTakim}`);
+  i++;
+}
+macOzeti.push(`Maç Sonucu: Ev Sahibi ${evSahibi} - Konuk Takım ${konukTakim}`);
+return macOzeti;
+}
+console.log(skorTabelasi(periyotSkoru,takimSkoru,4));
 
 
 
